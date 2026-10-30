@@ -65,7 +65,17 @@ Cada ID tiene la forma `izquierda[estado|memoria]símbolo_leído derecha`, sin e
 
 ## Arquitectura
 
-`load_machine` lee YAML con `safe_load` y `parse_machine` valida estados, alfabetos, entradas y transiciones. La tabla de transiciones es un diccionario indexado por `(estado, memoria, símbolo_leído)`, por lo que la búsqueda de cada paso es directa. `simulate` mantiene estado, memoria, posición de cabeza y un diccionario disperso `posición → símbolo`; una celda ausente es blanco. Escribe, mueve la cabeza y repite hasta alcanzar el estado final, no hallar transición o llegar al límite de pasos. El callback `on_configuration` recibe una copia independiente de la cinta en cada configuración para imprimir la traza; sin callback solo se copia la cinta en la configuración terminal. La interfaz de consola está en `turing/__main__.py`.
+El código se divide por responsabilidad:
+
+| Módulo | Función |
+| --- | --- |
+| `turing/models.py` | Define la máquina, las transiciones, las configuraciones y el resultado; también presenta una ID. |
+| `turing/parser.py` | Lee YAML con `safe_load` y valida estados, alfabetos, entradas y transiciones. |
+| `turing/simulator.py` | Ejecuta la máquina paso a paso sobre una cinta dispersa. |
+| `turing/__main__.py` | Procesa argumentos e imprime las IDs y resultados. |
+| `turing/core.py` | Conserva las importaciones públicas anteriores para scripts y pruebas existentes. |
+
+La tabla de transiciones es un diccionario indexado por `(estado, memoria, símbolo_leído)`, por lo que la búsqueda de cada paso es directa. `simulate` mantiene estado, memoria, posición de cabeza y un diccionario disperso `posición → símbolo`; una celda ausente es blanco. Escribe, mueve la cabeza y repite hasta alcanzar el estado final, no hallar transición o llegar al límite de pasos. El callback `on_configuration` recibe una copia independiente de la cinta en cada configuración para imprimir la traza; sin callback solo se copia la cinta en la configuración terminal.
 
 ## Pruebas
 
