@@ -160,12 +160,14 @@ def simulate(machine: Machine, value: str, *, max_steps: int = 100_000,
     tape = {i: char for i, char in enumerate(value)}
     state, cache, head, steps = machine.initial, None, 0, 0
     while True:
-        configuration = Configuration(steps, state, cache, head, tape.copy())
+        terminal = state == machine.final
+        transition = None if terminal else machine.transitions.get((state, cache, tape.get(head)))
+        stopped = terminal or transition is None or steps >= max_steps
+        configuration = Configuration(steps, state, cache, head, tape.copy()) if stopped or on_configuration else None
         if on_configuration is not None:
             on_configuration(configuration)
-        if state == machine.final:
+        if terminal:
             return Result(True, 'estado final', steps, configuration)
-        transition = machine.transitions.get((state, cache, tape.get(head)))
         if transition is None:
             return Result(False, 'sin transición aplicable', steps, configuration)
         if steps >= max_steps:
