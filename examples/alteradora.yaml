@@ -1,0 +1,14 @@
+# Complementa 0 <-> 1. Nunca borra la entrada; rechaza la cinta vacía.
+q_states:
+  q_list: [inicio, cambiar, aceptar]
+  initial: inicio
+  final: aceptar
+alphabet: ['0', '1']
+tape_alphabet: ['0', '1', null]
+delta:
+  - {params: {initial_state: inicio, mem_cache_value: null, tape_input: '0'}, output: {final_state: cambiar, mem_cache_value: null, tape_output: '1', tape_displacement: R}}
+  - {params: {initial_state: inicio, mem_cache_value: null, tape_input: '1'}, output: {final_state: cambiar, mem_cache_value: null, tape_output: '0', tape_displacement: R}}
+  - {params: {initial_state: cambiar, mem_cache_value: null, tape_input: '0'}, output: {final_state: cambiar, mem_cache_value: null, tape_output: '1', tape_displacement: R}}
+  - {params: {initial_state: cambiar, mem_cache_value: null, tape_input: '1'}, output: {final_state: cambiar, mem_cache_value: null, tape_output: '0', tape_displacement: R}}
+  - {params: {initial_state: cambiar, mem_cache_value: null, tape_input: null}, output: {final_state: aceptar, mem_cache_value: null, tape_output: null, tape_displacement: S}}
+simulation_strings: ['00000', '11111', '010101', '1010101']
