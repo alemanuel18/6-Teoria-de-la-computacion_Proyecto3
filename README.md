@@ -77,6 +77,17 @@ El código se divide por responsabilidad:
 
 La tabla de transiciones es un diccionario indexado por `(estado, memoria, símbolo_leído)`, por lo que la búsqueda de cada paso es directa. `simulate` mantiene estado, memoria, posición de cabeza y un diccionario disperso `posición → símbolo`; una celda ausente es blanco. Escribe, mueve la cabeza y repite hasta alcanzar el estado final, no hallar transición o llegar al límite de pasos. El callback `on_configuration` recibe una copia independiente de la cinta en cada configuración para imprimir la traza; sin callback solo se copia la cinta en la configuración terminal.
 
+### Qué hace cada parte
+
+1. **Archivos de ejemplo (`examples/`)**: describen los estados, alfabetos, transiciones y cadenas que se van a procesar. La reconocedora comprueba la forma `aⁿbⁿ`; la alteradora invierte cada bit.
+2. **Lectura y validación (`turing/parser.py`)**: `load_machine` abre el YAML y `parse_machine` comprueba que sus estados y símbolos existan, que las entradas pertenezcan al alfabeto y que cada transición sea válida y única. Si algo falla, muestra un error de configuración.
+3. **Datos y visualización (`turing/models.py`)**: `Machine` guarda la definición de la MT; `Transition` representa una regla; `Configuration` guarda una instantánea de la cinta, cabeza, estado y memoria; `Result` guarda la decisión y el número de pasos. `Configuration.render()` convierte la instantánea en una ID legible.
+4. **Simulación (`turing/simulator.py`)**: `simulate` coloca la cadena en la cinta y, en cada paso, lee la celda actual, busca la transición correspondiente, escribe el símbolo nuevo y mueve la cabeza. Termina al llegar al estado final, quedarse sin transición o agotar el límite de pasos.
+5. **Consola (`turing/__main__.py`)**: recibe la ruta del YAML y las opciones, simula cada cadena e imprime sus IDs y el resultado. `turing/core.py` reúne las importaciones públicas para usar estas funciones desde otros programas.
+6. **Verificación (`tests/`)**: `test_turing.py` comprueba la lógica y los errores de configuración; `load_test.py` mide entradas grandes. `requirements.txt` declara PyYAML, la dependencia necesaria para leer los archivos.
+
+El recorrido completo es: **YAML → validación → máquina en memoria → simulación de cada cadena → IDs y resultado**.
+
 ## Pruebas
 
 ```bash
