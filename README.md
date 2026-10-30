@@ -99,4 +99,4 @@ Las pruebas unitarias recorren exhaustivamente las 511 cadenas binarias de longi
 
 ## Entrega
 
-El código y las instrucciones están listos para un repositorio privado. La creación del repositorio, la invitación de docentes/auxiliares en GitHub y la grabación/publicación del video de YouTube requieren las cuentas y datos del curso del estudiante. Para el video, ejecute ambos YAML sin `--no-trace` y explique la arquitectura anterior.
+[Video de demostracion](https://youtu.be/Rmmv2PDKk1E)
